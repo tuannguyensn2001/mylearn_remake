@@ -20,12 +20,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed tag
  * @property mixed media
  */
-class Course extends JsonResource
+class CourseResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  Request  $request
+     * @param Request $request
      * @return array
      */
     public function toArray($request): array
@@ -46,9 +46,12 @@ class Course extends JsonResource
                     'name' => $this->tag->category->name,
                 ]
             ],
+//            'media' => [
+//                'source' => convertStorage($this->media->source),
+//            ],
             'media' => [
-                'source' => convertStorage($this->media->source),
-            ],
+                'source' => $this->media->source,
+            ]
 
         ];
     }

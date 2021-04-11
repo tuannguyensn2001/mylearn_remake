@@ -3,25 +3,30 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Course;
+use App\Repositories\Course\CourseRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Resources\Course as CourseCollection;
+use App\Http\Resources\CourseResource ;
 
 class CourseController extends Controller
 {
 
+    private $courseRepository;
+
+    public function __construct(CourseRepository $courseRepository)
+    {
+        $this->courseRepository = $courseRepository;
+    }
+
     public function index(): JsonResponse
     {
-        $courses = Course::with('tag','tag.category','media')->get();
 
         return response()->json([
-            'data' =>  CourseCollection::collection($courses),
+            'data' =>  CourseResource::collection($this->courseRepository->all()),
         ],200);
 
-        return response()->json([
-            'data' =>  $courses,
-        ],200);
     }
 
 }

@@ -18,4 +18,9 @@ class Category extends Model
         return $this->hasMany(Tag::class);
     }
 
+    public function tagCourse(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
+    {
+        return $this->hasOneThrough(Course::class,Tag::class);
+    }
+
 }
