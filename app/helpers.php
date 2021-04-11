@@ -1,6 +1,7 @@
 <?php
 
-function convertStorage($path){
+function convertStorage($path): string
+{
     $path = explode('/',$path);
     $path[0] = '/assets/storage';
     $path = implode('/',$path);
