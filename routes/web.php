@@ -26,4 +26,5 @@ Route::group(['prefix' =>'admin'],function(){
     Route::resource('categories', CategoryController::class);
     Route::resource('tags', TagController::class);
     Route::resource('courses', CourseController::class);
+    Route::resource('lessons',\App\Http\Controllers\Backend\LessonController::class);
 });

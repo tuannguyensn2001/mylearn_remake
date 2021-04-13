@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
+use App\Models\Tag;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -19,13 +20,19 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Application|Factory|View|Response
+     * @return Application|Factory|View|JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         $categories = Category::all();
 
-        return view('backend.category.index',compact('categories'));
+        if ($request->query('api') && boolval($request->query('api'))){
+            return response()->json([
+                'data' => $categories
+            ],200);
+        }
+
+            return view('backend.category.index', compact('categories'));
     }
 
     /**
@@ -46,26 +53,30 @@ class CategoryController extends Controller
      */
     public function store(CategoryRequest $request): RedirectResponse
     {
-        $categories = $request->only('name','slug','description');
+        $categories = $request->only('name', 'slug', 'description');
 
-        try{
+        try {
             Category::create($categories);
-        } catch (\Exception $exception){
-            return redirect()->back()->with('failed','Thêm mới thất bại')->withInput();
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('failed', 'Thêm mới thất bại')->withInput();
         }
 
-        return redirect()->route('categories.index')->with('success','Thêm mới thành công');
+        return redirect()->route('categories.index')->with('success', 'Thêm mới thành công');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return Response
+     * @param int $id
+     * @return JsonResponse
      */
-    public function show($id)
+    public function show(int $id,Request $request): JsonResponse
     {
-        //
+        if ($request->query('tag') && boolval($request->query('tag'))){
+            return response()->json([
+                'data' => Tag::where('category_id',$id)->get()
+            ]);
+        }
     }
 
     /**
@@ -77,7 +88,7 @@ class CategoryController extends Controller
     public function edit(int $id)
     {
         $category = Category::find($id);
-        return view('backend.category.edit',compact('category'));
+        return view('backend.category.edit', compact('category'));
     }
 
     /**
@@ -91,15 +102,15 @@ class CategoryController extends Controller
     {
         $category = Category::findOrFail($id);
 
-        $data = $request->only('name','slug','description');
+        $data = $request->only('name', 'slug', 'description');
 
         try {
             $category->update($data);
-        } catch (\Exception $exception){
-            return redirect()->back()->with('failed','Sửa không thành công, vui lòng thử lại');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('failed', 'Sửa không thành công, vui lòng thử lại');
         }
 
-        return redirect()->route('categories.index')->with('success','Sửa thành công');
+        return redirect()->route('categories.index')->with('success', 'Sửa thành công');
     }
 
     /**
@@ -109,14 +120,16 @@ class CategoryController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function destroy(Request $request,$id): JsonResponse
+    public function destroy(Request $request, $id): JsonResponse
     {
 
 
         Category::find($id)->delete();
 
-        Session::flash('success','Xóa thành công');
+        Session::flash('success', 'Xóa thành công');
 
-        return response()->json([],200);
+        return response()->json([], 200);
     }
+
+
 }

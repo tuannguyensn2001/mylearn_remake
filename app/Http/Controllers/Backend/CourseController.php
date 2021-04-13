@@ -6,6 +6,7 @@ use App\Defines\Media;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CourseRequest;
 use App\Models\Course;
+use App\Models\Lesson;
 use App\Models\Tag;
 use App\Traits\StorageFile;
 use Google\Exception;
@@ -96,11 +97,16 @@ class CourseController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return Response
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(int $id, Request $request): \Illuminate\Http\JsonResponse
     {
-        //
+        if ($request->query('lesson') && boolval($request->query('lesson'))){
+            return response()->json([
+                'data' => Course::query()->find($id)->chapters()->with('lessons')->get()
+            ]);
+        }
     }
 
     /**

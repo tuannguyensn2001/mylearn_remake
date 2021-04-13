@@ -21,4 +21,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'v1'],function(){
     Route::get('/courses',[CourseController::class,'index']);
+    Route::get('/course/{slug}',[\App\Http\Controllers\API\LessonController::class,'index']);
 });

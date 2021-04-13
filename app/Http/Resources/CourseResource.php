@@ -50,7 +50,7 @@ class CourseResource extends JsonResource
 //                'source' => convertStorage($this->media->source),
 //            ],
             'media' => [
-                'source' => $this->media->source,
+                'source' => convertStorage($this->media->source),
             ]
 
         ];

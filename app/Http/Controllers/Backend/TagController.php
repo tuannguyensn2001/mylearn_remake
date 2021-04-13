@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TagRequest;
 use App\Models\Category;
+use App\Models\Course;
 use App\Models\Tag;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -61,12 +62,16 @@ class TagController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return Response
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(int $id,Request $request): \Illuminate\Http\JsonResponse
     {
-        //
+        if ($request->query('course') && boolval($request->query('course'))){
+            return response()->json([
+                'data' => Course::query()->where('tag_id',$id)->get()
+            ]);
+        }
     }
 
     /**
