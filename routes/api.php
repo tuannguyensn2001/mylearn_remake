@@ -22,4 +22,18 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'v1'],function(){
     Route::get('/courses',[CourseController::class,'index']);
     Route::get('/course/{slug}',[\App\Http\Controllers\API\LessonController::class,'index']);
+
+    Route::post('/auth/register',[\App\Http\Controllers\API\AuthController::class,'register']);
+    Route::post('/auth/login',[\App\Http\Controllers\API\AuthController::class,'login']);
+
+    Route::post('/auth/refresh',[\App\Http\Controllers\API\AuthController::class,'refresh']);
+
+
+
+    Route::group(['middleware' => 'jwt'],function (){
+        Route::post('/auth/me',[\App\Http\Controllers\API\AuthController::class,'me']);
+
+        Route::get('/cart',[\App\Http\Controllers\API\CartController::class,'index']);
+        Route::post('/cart',[\App\Http\Controllers\API\CartController::class,'store']);
+    });
 });
