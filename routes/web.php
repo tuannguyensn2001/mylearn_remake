@@ -3,6 +3,7 @@
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\CourseController;
+use App\Http\Controllers\Backend\LessonController;
 use App\Http\Controllers\Backend\TagController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,5 +27,7 @@ Route::group(['prefix' =>'admin'],function(){
     Route::resource('categories', CategoryController::class);
     Route::resource('tags', TagController::class);
     Route::resource('courses', CourseController::class);
-    Route::resource('lessons',\App\Http\Controllers\Backend\LessonController::class);
+    Route::resource('lessons', LessonController::class);
 });
+
+Route::put('/lessons/order', [LessonController::class,'updateOrder'])->name('lessons.order');

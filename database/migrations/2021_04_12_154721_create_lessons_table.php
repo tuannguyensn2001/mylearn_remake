@@ -19,6 +19,7 @@ class CreateLessonsTable extends Migration
             $table->string('slug');
             $table->string('description');
             $table->string('chapter_id');
+            $table->integer('order');
             $table->string('video_url');
             $table->string('status');
             $table->timestamps();

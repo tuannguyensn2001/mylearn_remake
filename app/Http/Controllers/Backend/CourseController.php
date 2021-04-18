@@ -104,7 +104,9 @@ class CourseController extends Controller
     {
         if ($request->query('lesson') && boolval($request->query('lesson'))){
             return response()->json([
-                'data' => Course::query()->find($id)->chapters()->with('lessons')->get()
+                'data' => Course::query()->find($id)->chapters()->with('lessons',function($query){
+                    return $query->orderBy('order');
+                })->orderBy('order')->get()
             ]);
         }
     }
