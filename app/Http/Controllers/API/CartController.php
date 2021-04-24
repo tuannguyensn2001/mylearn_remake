@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CourseResource;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +26,7 @@ class CartController extends Controller
         $course = Course::query()->whereIn('id',$cart)->get();
 
         return response()->json([
-            'cart' => $course
+            'cart' => CourseResource::collection($course),
         ]);
 
     }
