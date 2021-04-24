@@ -53,7 +53,7 @@ class AuthController extends Controller
      *
      * @return JsonResponse
      */
-    public function logout()
+    public function logout(): JsonResponse
     {
         auth()->logout();
 
@@ -65,9 +65,10 @@ class AuthController extends Controller
      *
      * @return JsonResponse
      */
-    public function refresh()
+    public function refresh(): JsonResponse
     {
-        return $this->respondWithToken(auth()->refresh());
+
+        return $this->respondWithToken(auth()->refresh(false,true));
     }
 
     /**

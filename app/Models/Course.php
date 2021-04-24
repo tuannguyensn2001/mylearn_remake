@@ -30,6 +30,11 @@ class Course extends Model
         return $this->hasMany(Chapter::class);
     }
 
+    public function chapterLesson(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
+    {
+        return $this->hasOneThrough(Lesson::class,Chapter::class);
+    }
+
 
 
 }
