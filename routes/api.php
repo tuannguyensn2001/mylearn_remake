@@ -37,5 +37,7 @@ Route::group(['prefix' => 'v1'],function(){
 
         Route::get('/cart',[\App\Http\Controllers\API\CartController::class,'index']);
         Route::post('/cart',[\App\Http\Controllers\API\CartController::class,'store']);
+        Route::delete('/cart/{id}',[\App\Http\Controllers\API\CartController::class,'destroy']);
+        Route::post('/cart/buy',[\App\Http\Controllers\API\CartController::class,'buyCourse']);
     });
 });

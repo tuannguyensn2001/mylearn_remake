@@ -88,6 +88,56 @@
                     </ul>
                 </li>
 
+                <li class="sidebar-item"><a class="sidebar-link has-arrow waves-effect waves-dark"
+                                            href="javascript:void(0)" aria-expanded="false"><i
+                            class="mdi mdi-receipt"></i><span
+                            class="hide-menu">Quản lý bài giảng</span></a>
+                    <ul aria-expanded="false" class="collapse  first-level">
+                        <li class="sidebar-item">
+                            <a href="{{route('lessons.index')}}" class="sidebar-link">
+                                <i class="mdi mdi-note-plus"></i>
+                                <span class="hide-menu"> Danh sách bài giảng</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
+                <li class="sidebar-item"><a class="sidebar-link has-arrow waves-effect waves-dark"
+                                            href="javascript:void(0)" aria-expanded="false"><i
+                            class="mdi mdi-receipt"></i><span
+                            class="hide-menu">Quản lý người dùng </span></a>
+                    <ul aria-expanded="false" class="collapse  first-level">
+                        <li class="sidebar-item">
+                            <a href="{{route('users.index')}}" class="sidebar-link">
+                                <i class="mdi mdi-note-plus"></i>
+                                <span class="hide-menu"> Danh sách người dùng</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
+                <li class="sidebar-item"><a class="sidebar-link has-arrow waves-effect waves-dark"
+                                            href="javascript:void(0)" aria-expanded="false"><i
+                            class="mdi mdi-receipt"></i><span
+                            class="hide-menu">Quản lý nội dung </span></a>
+                    <ul aria-expanded="false" class="collapse  first-level">
+                        <li class="sidebar-item">
+                            <a href="{{route('contents.index')}}" class="sidebar-link">
+                                <i class="mdi mdi-note-plus"></i>
+                                <span class="hide-menu"> Danh sách nội dung</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{{route('contents.create')}}" class="sidebar-link">
+                                <i class="mdi mdi-note-plus"></i>
+                                <span class="hide-menu"> Thêm mới nội dung</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
 
             </ul>
         </nav>

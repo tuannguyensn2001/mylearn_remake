@@ -10,17 +10,24 @@ use Illuminate\Http\Request;
 class LessonController extends Controller
 {
 
-    public function index($slug)
+    public function index($slug): \Illuminate\Http\JsonResponse
     {
-        $course = Course::with('chapters','chapters.lessons')->where('slug',$slug)->first();
+        $course = Course::with([
+            'chapters' => function ($query) {
+                return $query->orderBy('order');
+            },
+            'chapters.lessons' => function ($query) {
+                return $query->orderBy('order');
+            }
+        ])->where('slug', $slug)->first();
 
-        return response()->json($course,200);
+        return response()->json($course, 200);
     }
 
-    public function show($course,$lesson)
+    public function show($course, $lesson)
     {
-        $lesson = Course::query()->where('slug',$course)
-            ->first()->chapterLesson()->where('slug',$lesson)->first();
+        $lesson = Course::query()->where('slug', $course)
+            ->first()->chapterLesson()->where('slug', $lesson)->first();
         return response()->json([
             'data' => $lesson
         ]);

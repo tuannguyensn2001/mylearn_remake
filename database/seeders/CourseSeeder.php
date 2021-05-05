@@ -52,7 +52,7 @@ class CourseSeeder extends Seeder
                 'status' => 'PUBLISH',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
-            ]
+            ],
         ]);
     }
 }

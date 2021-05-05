@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Repositories\Course\CourseRepository;
 use App\Repositories\Course\CourseRepositoryEloquent;
+use App\Repositories\Profile\ProfileRepository;
+use App\Repositories\Profile\ProfileRepositoryEloquent;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -15,7 +17,8 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(CourseRepository::class,CourseRepositoryEloquent::class);
+        $this->app->bind(CourseRepository::class,CourseRepositoryEloquent::class);
+        $this->app->bind(ProfileRepository::class,ProfileRepositoryEloquent::class);
     }
 
     /**

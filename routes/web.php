@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\CategoryController;
+use App\Http\Controllers\Backend\ChapterController;
 use App\Http\Controllers\Backend\CourseController;
 use App\Http\Controllers\Backend\LessonController;
 use App\Http\Controllers\Backend\TagController;
@@ -28,6 +29,13 @@ Route::group(['prefix' =>'admin'],function(){
     Route::resource('tags', TagController::class);
     Route::resource('courses', CourseController::class);
     Route::resource('lessons', LessonController::class);
+    Route::resource('chapters', ChapterController::class)->only([
+        'store','update'
+    ]);
+    Route::resource('users',\App\Http\Controllers\Backend\UserController::class)->only([
+        'index','show','update'
+    ]);
+    Route::resource('contents',\App\Http\Controllers\Backend\ContentController::class);
 });
 
 Route::put('/lessons/order', [LessonController::class,'updateOrder'])->name('lessons.order');

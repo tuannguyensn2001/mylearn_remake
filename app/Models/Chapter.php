@@ -5,6 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property mixed name
+ * @property mixed course_id
+ * @property int|mixed order
+ */
 class Chapter extends Model
 {
     use HasFactory;

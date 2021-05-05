@@ -64,14 +64,14 @@
         <div class="row">
             <template x-if="listChapter.length != 0">
                 <div class="add_chapter d-flex justify-content-end">
-                    <button class="btn btn-primary">Thêm mới chương học</button>
+                    <button @click="addChapter" class="btn btn-primary">Thêm mới chương học</button>
                 </div>
             </template>
             <div class="list-chapter">
                 <template x-for="chapter in listChapter" :key="chapter.id">
                     <div class="chapter-item">
                         <div class="d-flex justify-content-between">
-                            <h2 x-text="chapter.name"></h2>
+                            <h2 @click="editChapter(chapter.id)" x-text="chapter.name"></h2>
                             <button @click="addLesson(chapter.id)" class="btn btn-success">Thêm mới bài giảng</button>
                         </div>
                         <div class="list-lesson" x-bind:data-id="chapter.id">
@@ -153,6 +153,30 @@
             </div>
         </div>
 
+        <div class="modal fade" id="editChapter" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel" x-text="statusForm()"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label for="chapter_name">Tên chương học</label>
+                            <input class="form-control" type="text" id="chapter_name" x-model="currentChapter.name">
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" @click="submitChapter" class="btn btn-primary accept">Đồng ý</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
     </div>
 @endsection
@@ -172,12 +196,9 @@
     <script src="{!! asset('assets/backend/js/helper/string_to_slug.js') !!}"></script>
     <script>
 
-        $('.list-chapter').sortable({
-            update() {
-                debounce(updateAll, 5000)();
-            }
-        });
+
         const modalEdit = new bootstrap.Modal(document.querySelector('#editLesson'));
+        const modalEditChapter = new bootstrap.Modal(document.querySelector('#editChapter'));
 
         function debounce(func, wait) {
             let timeout;
@@ -205,11 +226,25 @@
                 tag: null,
                 course: null,
                 currentLesson: {},
+                currentChapter: {},
                 isEdit: false,
+                isEditChapter: false,
                 statusForm() {
                     return this.isEdit ? 'Chỉnh sửa bài giảng' : 'Thêm mới bài giảng'
                 },
                 init() {
+                    $('.list-chapter').sortable({
+                        update: (event, ui) => {
+                            const id = [];
+                            $('.list-lesson').each(function () {
+                                id.push($(this).attr('data-id'));
+                            })
+                            this.listChapter = id.map(item => {
+                                return this.listChapter.find(index => parseInt(item) === index.id);
+                            });
+                            debounce(updateAll, 5000)();
+                        }
+                    });
                     axios.get('{{ route('categories.index',['api' => 'true']) }}')
                         .then(response => {
                             this.listCategory = response.data.data;
@@ -240,16 +275,15 @@
 
                     this.$watch('listChapter', value => {
                         const _this = this;
-                        setTimeout(() => {
-                            $('.list-lesson').sortable({
-                                update: (event, ui) => {
-                                    debounce(updateAll, 5000)();
-                                }
-                            });
-                        }, 1000);
+                        $('.list-lesson').sortable({
+                            update: (event, ui) => {
+                                debounce(updateAll, 5000)();
+                            },
+                        });
+
                     })
 
-                    this.$watch('currentLesson.name',value => this.currentLesson.slug=string_to_slug(value));
+                    this.$watch('currentLesson.name', value => this.currentLesson.slug = string_to_slug(value));
 
                 },
                 editLesson(id) {
@@ -277,6 +311,9 @@
                 },
                 submit() {
                     this.isEdit ? this.saveEditLesson() : this.saveAddLesson();
+                },
+                submitChapter() {
+                    this.isEditChapter ? this.saveEditChapter() : this.saveAddChapter();
                 },
                 saveEditLesson() {
                     axios.put(`/admin/lessons/${this.currentLesson.id}`, {
@@ -308,6 +345,43 @@
                             modalEdit.hide();
                         })
                         .catch(err => toastr.error('Thêm mới không thành công'));
+                },
+                addChapter() {
+                    this.isEditChapter = false;
+                    this.currentChapter = {
+                        name: null,
+                        course_id: this.course,
+                    };
+                    modalEditChapter.show();
+                },
+                saveAddChapter() {
+                    axios.post('{{route('chapters.store')}}', this.currentChapter)
+                        .then(response => {
+                            const chapter = response.data.data;
+                            this.listChapter.push(chapter);
+                            modalEditChapter.hide();
+                        })
+                        .catch(err => toastr.error(err.response.message));
+                },
+                editChapter(id) {
+                    this.isEditChapter = true;
+                    this.currentChapter = {...this.listChapter.find(item => item.id === id)};
+                    modalEditChapter.show();
+                },
+                saveEditChapter() {
+                    axios.put(`/admin/chapters/${this.currentChapter.id}`, {
+                        chapter: this.currentChapter
+                    })
+                        .then(response => {
+                            const chapter = response.data.data;
+                            const index = this.listChapter.findIndex(item => item.id === chapter.id);
+                            this.listChapter[index] = chapter;
+                            toastr.success(response.data.message);
+                        })
+                        .catch(err => toastr.error(error.response.data.message))
+                        .finally(() => {
+                            modalEditChapter.hide();
+                        })
                 }
 
             }
@@ -333,6 +407,8 @@
                 data: listChapter
             })
                 .then(response => {
+                    const chapters = response.data.data;
+                    console.log('update');
                 })
                 .catch(err => {
                 });
