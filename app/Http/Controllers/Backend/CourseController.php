@@ -52,8 +52,11 @@ class CourseController extends Controller
      * @param CourseRequest $request
      * @return RedirectResponse
      */
-    public function store(CourseRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
+
+        $file = $request->file('file');
+
 
         $validator = Validator::make($request->all(),[
             'file' => 'required|file'
@@ -64,7 +67,7 @@ class CourseController extends Controller
         }
 
 
-        $file = $request->file('file');
+
 
         try {
             $media = \App\Models\Media::create([

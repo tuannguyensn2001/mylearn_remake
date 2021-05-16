@@ -18,7 +18,6 @@ trait StorageFile
 
     public function uploadFile($file, $path, $disk = 'local')
     {
-        $path = Storage::disk($disk)->putFile($path, $file);
-        return $path;
+        return Storage::disk($disk)->putFile($path, $file);
     }
 }
