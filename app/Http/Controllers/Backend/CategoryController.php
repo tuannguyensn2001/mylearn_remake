@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Exceptions\CRUDException;
+use App\Http\Controllers\Base\CRUDController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use App\Models\Tag;
+use App\Traits\CRUD;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -15,8 +18,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Session;
 
-class CategoryController extends Controller
+class CategoryController extends CRUDController
 {
+
+    use CRUD;
+
     /**
      * Display a listing of the resource.
      *
@@ -24,25 +30,43 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $categories = Category::all();
 
-        if ($request->query('api') && boolval($request->query('api'))){
-            return response()->json([
-                'data' => $categories
-            ],200);
-        }
+        return $this->crudIndex($request, function () use ($request) {
+            $categories = Category::all();
+            if ($request->query('api') && boolval($request->query('api'))) {
+                return response()->json([
+                    'data' => $categories
+                ], 200);
+            } else {
+                throw new CRUDException();
+            }
+        });
 
-            return view('backend.category.index', compact('categories'));
+//
+//        $categories = Category::all();
+//
+//        if ($request->query('api') && boolval($request->query('api'))) {
+//            return response()->json([
+//                'data' => $categories
+//            ], 200);
+//        }
+//
+//        return view('backend.category.index', compact('categories'));
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return Application|Factory|View|Response
+     * @return Application|Factory|View
      */
     public function create()
     {
-        return view('backend.category.create');
+        return $this->crudCreate(function () {
+            return [
+                'name' => 'Tuấn'
+            ];
+        });
+//        return view('backend.category.create');
     }
 
     /**
@@ -53,15 +77,16 @@ class CategoryController extends Controller
      */
     public function store(CategoryRequest $request): RedirectResponse
     {
-        $categories = $request->only('name', 'slug', 'description');
-
-        try {
-            Category::create($categories);
-        } catch (\Exception $exception) {
-            return redirect()->back()->with('failed', 'Thêm mới thất bại')->withInput();
-        }
-
-        return redirect()->route('categories.index')->with('success', 'Thêm mới thành công');
+        return $this->crudStore($request);
+//        $categories = $request->only('name', 'slug', 'description');
+//
+//        try {
+//            Category::create($categories);
+//        } catch (\Exception $exception) {
+//            return redirect()->back()->with('failed', 'Thêm mới thất bại')->withInput();
+//        }
+//
+//        return redirect()->route('categories.index')->with('success', 'Thêm mới thành công');
     }
 
     /**
@@ -70,11 +95,11 @@ class CategoryController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function show(int $id,Request $request): JsonResponse
+    public function show(int $id, Request $request): JsonResponse
     {
-        if ($request->query('tag') && boolval($request->query('tag'))){
+        if ($request->query('tag') && boolval($request->query('tag'))) {
             return response()->json([
-                'data' => Tag::where('category_id',$id)->get()
+                'data' => Tag::where('category_id', $id)->get()
             ]);
         }
     }
@@ -87,6 +112,7 @@ class CategoryController extends Controller
      */
     public function edit(int $id)
     {
+        return $this->crudEdit($id);
         $category = Category::find($id);
         return view('backend.category.edit', compact('category'));
     }
@@ -132,4 +158,28 @@ class CategoryController extends Controller
     }
 
 
+    function getModel(): string
+    {
+        return Category::class;
+    }
+
+    function getKey(): array
+    {
+        return [
+            'name' => 'categories',
+            'key' => 'category'
+        ];
+    }
+
+    function getRequest(): string
+    {
+        return CategoryRequest::class;
+    }
+
+    function getData(): array
+    {
+        return [
+            'name', 'slug', 'description'
+        ];
+    }
 }

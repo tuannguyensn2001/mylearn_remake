@@ -16,7 +16,6 @@ class Course extends Model
     protected $guarded = ['id'];
 
 
-
     public function media(): BelongsTo
     {
         return $this->belongsTo(Media::class);
@@ -34,16 +33,18 @@ class Course extends Model
 
     public function chapterLesson(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
     {
-        return $this->hasOneThrough(Lesson::class,Chapter::class);
+        return $this->hasOneThrough(Lesson::class, Chapter::class);
     }
 
     public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(User::class,'user_course','course_id','user_id')->withTimestamps();
+        return $this->belongsToMany(User::class, 'user_course', 'course_id', 'user_id')->withTimestamps();
     }
 
-
-
+    public function contents(): HasMany
+    {
+        return $this->hasMany(Content::class);
+    }
 
 
 }
