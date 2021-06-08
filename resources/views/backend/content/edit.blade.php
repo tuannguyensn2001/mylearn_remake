@@ -18,16 +18,17 @@
         <?php
 
 
-        $action = route('contents.store')
+        $action = route('contents.update',['content' => $content->id])
 
         ?>
         <div class="card">
             <form class="form-horizontal" action="{{$action}}" method="post">
+                {{method_field('PUT')}}
                 @csrf
                 <div class="card-body">
                     <h4 class="card-title">Danh mục</h4>
 
-                    <x-crud.form :input="$fields"/>
+                    <x-crud.form :instance="$content" isEdit="true" :input="$fields"/>
                 </div>
                 <div class="border-top">
                     <div class="card-body">

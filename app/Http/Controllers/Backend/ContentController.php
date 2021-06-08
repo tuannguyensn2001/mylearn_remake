@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Defines\Relationship;
 use App\Http\Controllers\Base\CRUDController;
 use App\Http\Controllers\Controller;
 use App\Models\Content;
+use App\Models\Course;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class ContentController extends CRUDController
 {
@@ -27,6 +30,48 @@ class ContentController extends CRUDController
      */
     public function create()
     {
+        $data = \App\Models\Course::all()->map(function ($item) {
+            return [
+                'key' => $item->id,
+                'value' => $item->name
+            ];
+        })->toArray();
+
+
+        $this->addFields([
+            [
+                'label' => 'Nội dung',
+                'name' => 'content',
+                'id' => 'content',
+                'element' => 'input',
+                'type' => 'text',
+//                'value' => old('content'),
+                'placeholder' => 'Nhập nội dung',
+                'class' => 'form-control'
+            ],
+            [
+                'label' => 'Loại nội dung',
+                'name' => 'type',
+                'id' => 'type',
+                'element' => 'select',
+                'data' => \App\Defines\Content::getListsByKeyValue(),
+//                'value' => old('type'),
+                'placeholder' => 'Nhập loại nội dung',
+                'class' => null
+            ],
+            [
+                'element' => 'select',
+                'label' => 'Khóa học',
+                'id' => 'course_id',
+                'name' => 'course_id',
+//                'value' => old('course_id'),
+                'placeholder' => 'Chọn khóa học',
+                'class' => null,
+                'data' => $data,
+                'relationship' => Relationship::_ONE_TO_MANY,
+                'models' => Course::class,
+            ]
+        ]);
         return $this->crudCreate();
     }
 
@@ -56,11 +101,54 @@ class ContentController extends CRUDController
      * Show the form for editing the specified resource.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function edit($id)
     {
-        //
+        $data = \App\Models\Course::all()->map(function ($item) {
+            return [
+                'key' => $item->id,
+                'value' => $item->name
+            ];
+        })->toArray();
+
+
+        $this->addFields([
+            [
+                'label' => 'Nội dung',
+                'name' => 'content',
+                'id' => 'content',
+                'element' => 'input',
+                'type' => 'text',
+//                'value' => old('content'),
+                'placeholder' => 'Nhập nội dung',
+                'class' => 'form-control'
+            ],
+            [
+                'label' => 'Loại nội dung',
+                'name' => 'type',
+                'id' => 'type',
+                'element' => 'select',
+                'data' => \App\Defines\Content::getListsByKeyValue(),
+//                'value' => old('type'),
+                'placeholder' => 'Nhập loại nội dung',
+                'class' => null
+            ],
+            [
+                'element' => 'select',
+                'label' => 'Khóa học',
+                'id' => 'course_id',
+                'name' => 'course_id',
+//                'value' => old('course_id'),
+                'placeholder' => 'Chọn khóa học',
+                'class' => null,
+                'data' => $data,
+                'relationship' => Relationship::_ONE_TO_MANY,
+                'models' => 'course',
+                'attribute' => 'name'
+            ]
+        ]);
+        return $this->crudEdit($id);
     }
 
     /**
@@ -68,11 +156,11 @@ class ContentController extends CRUDController
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, $id)
     {
-        //
+        return $this->crudUpdate($request,$id);
     }
 
     /**

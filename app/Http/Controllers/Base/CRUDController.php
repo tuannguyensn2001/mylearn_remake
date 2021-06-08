@@ -11,6 +11,18 @@ use Illuminate\Http\Request;
 abstract class CRUDController extends Controller
 {
 
+    protected $fields;
+
+
+    public function __construct()
+    {
+        $this->fields = [];
+    }
+
+    protected function addFields($data)
+    {
+        array_push($this->fields,...$data);
+    }
 
     abstract function getModel();
 
@@ -38,6 +50,7 @@ abstract class CRUDController extends Controller
     public function crudCreate(\Closure $closure = null)
     {
         $data = !is_null($closure) ? $closure() : [];
+        $data['fields'] = $this->fields;
         return view("backend.{$this->getKey()['key']}.create", $data);
     }
 
@@ -61,7 +74,9 @@ abstract class CRUDController extends Controller
 
         $$name = app()->make($this->getModel())::findOrFail($id);
 
-        return view("backend.{$this->getKey()['key']}.edit", compact($name));
+        $fields = $this->fields;
+
+        return view("backend.{$this->getKey()['key']}.edit", compact($name,'fields'));
     }
 
     /**

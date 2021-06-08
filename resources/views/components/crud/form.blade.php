@@ -1,4 +1,5 @@
 <div>
+
     @foreach($input as $item)
 
         @if($item['element'] === 'input')
@@ -21,8 +22,10 @@
                 <div class="col-sm-9">
                     <select class="select2 form-select shadow-none" name="{{$item['name']}}" id="{{$item['id']}}">
                         <option value="" selected hidden disabled>{{$item['placeholder']}}</option>
-                        @foreach($item['data'] as $key=>$item)
-                            <option value="{{ $item['key'] }}">{{ $item['value'] }}</option>
+                        @foreach($item['data'] as $key=>$item1)
+
+                            <option
+                                {{$item['value'] === $item1['key'] ? 'selected' : null}} value="{{ $item1['key'] }}">{{ $item1['value'] }}</option>
                         @endforeach
                     </select>
                 </div>

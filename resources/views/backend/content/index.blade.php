@@ -29,7 +29,7 @@
                 return $row->content;
             },
             function ($row, $key) {
-                return $row->type;
+                return \App\Defines\Content::getLists()[$row->type];
             },
             function ($row, $key) {
                 return $row->course->name;

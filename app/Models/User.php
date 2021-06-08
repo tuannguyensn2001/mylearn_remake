@@ -63,7 +63,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function courses(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Course::class,'user_course','user_id','course_id')->withTimestamps();
+        return $this->belongsToMany(Course::class, 'user_course', 'user_id', 'course_id')->withTimestamps();
     }
 
     public function wallet(): \Illuminate\Database\Eloquent\Relations\HasOne
@@ -74,6 +74,11 @@ class User extends Authenticatable implements JWTSubject
     public function profile(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Profile::class);
+    }
+
+    public function classrooms(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Classroom::class, 'classroom_user', 'user_id', 'classroom_id')->withTimestamps()->withPivot('role');
     }
 
 }

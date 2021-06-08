@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    dd(\Illuminate\Support\Facades\Redis::get('name'));
 });
 
 Route::group(['prefix' =>'admin'],function(){

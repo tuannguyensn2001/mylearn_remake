@@ -39,5 +39,9 @@ Route::group(['prefix' => 'v1'],function(){
         Route::post('/cart',[\App\Http\Controllers\API\CartController::class,'store']);
         Route::delete('/cart/{id}',[\App\Http\Controllers\API\CartController::class,'destroy']);
         Route::post('/cart/buy',[\App\Http\Controllers\API\CartController::class,'buyCourse']);
+
+        Route::get('/classrooms',[\App\Http\Controllers\API\ClassroomController::class,'index']);
+        Route::post('/classrooms',[\App\Http\Controllers\API\ClassroomController::class,'store'])->name('classrooms.store');
+
     });
 });
