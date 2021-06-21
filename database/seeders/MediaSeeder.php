@@ -15,7 +15,7 @@ class MediaSeeder extends Seeder
     public function run()
     {
         Media::create([
-            'source' => 'public/course/pBW5h4545CKyNKDsLu7r54KPg9jS8XRSlrOK5UX1.png',
+            'source' => 'https://avatar-ex-swe.nixcdn.com/singer/avatar/2019/03/21/0/e/3/d/1553153837657_600.jpg',
             'type' => 'png'
         ]);
     }

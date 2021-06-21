@@ -26,6 +26,7 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email ' => $this->email,
             'courses' => CourseResource::collection($this->courses),
+            'profile' => $this->profile->load('media')
         ];
     }
 }

@@ -81,4 +81,8 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(Classroom::class, 'classroom_user', 'user_id', 'classroom_id')->withTimestamps()->withPivot('role');
     }
 
+    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

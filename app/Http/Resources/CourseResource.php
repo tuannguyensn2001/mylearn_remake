@@ -50,7 +50,7 @@ class CourseResource extends JsonResource
 //                'source' => convertStorage($this->media->source),
 //            ],
             'media' => [
-                'source' => convertStorage($this->media->source),
+                'source' => asset($this->media->source),
             ],
             'pivot' => $this->pivot ?? null,
 

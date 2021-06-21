@@ -22,6 +22,7 @@ class AuthController extends Controller
         $user->save();
         return response()->json($user);
     }
+
     /**
      * Get a JWT via given credentials.
      *
@@ -32,7 +33,7 @@ class AuthController extends Controller
         $credentials = request(['email', 'password']);
 
 
-        if (! $token = auth()->attempt($credentials)) {
+        if (!$token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -70,7 +71,7 @@ class AuthController extends Controller
     public function refresh(): JsonResponse
     {
 
-        return $this->respondWithToken(auth()->refresh(false,true));
+        return $this->respondWithToken(auth()->refresh(false, true));
     }
 
     /**
@@ -86,10 +87,9 @@ class AuthController extends Controller
             'token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => new UserResource(auth()->user()),
+            'user' => new UserResource(auth()->user()->load('profile')),
         ]);
     }
-
 
 
 }
