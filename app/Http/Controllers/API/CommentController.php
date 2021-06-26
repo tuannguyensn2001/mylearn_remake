@@ -48,7 +48,7 @@ class CommentController extends Controller
         }
 
 
-        event(new CommentEvent($result));
+        event(new CommentEvent($result, $comment['commentable_id']));
 
         return response()->json([
             'data' => $result

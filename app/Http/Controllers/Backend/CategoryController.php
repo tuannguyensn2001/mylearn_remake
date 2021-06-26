@@ -93,6 +93,7 @@ class CategoryController extends CRUDController
      * Display the specified resource.
      *
      * @param int $id
+     * @param Request $request
      * @return JsonResponse
      */
     public function show(int $id, Request $request): JsonResponse

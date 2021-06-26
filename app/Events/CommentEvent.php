@@ -17,15 +17,17 @@ class CommentEvent implements ShouldBroadcast
 
 
     public $comment;
+    public $lesson_id;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($comment)
+    public function __construct($comment, $lesson_id)
     {
         $this->comment = new CommentResource($comment);
+        $this->lesson_id = $lesson_id;
     }
 
     /**
@@ -41,6 +43,6 @@ class CommentEvent implements ShouldBroadcast
 
     public function broadcastAs(): string
     {
-        return 'lesson-event';
+        return 'lesson-event-' . $this->lesson_id;
     }
 }
